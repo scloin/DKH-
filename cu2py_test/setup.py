@@ -5,7 +5,7 @@ setup(
     name='ipc_extension',
     ext_modules=[
         CUDAExtension('ipc_extension', [
-            'cu2py_ptr_read.cu'
+            'cu2py_ptr_read.cu', 
         ])
     ],
     cmdclass={

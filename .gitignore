@@ -1,0 +1,4 @@
+*.so
+*.o
+*/build/*
+*.nsys-rep

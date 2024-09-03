@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <cuda_runtime.h>
 #include <cstring>
+#include <ATen/cuda/CUDAGraph.h>
+
 
 #define DSIZE 3
 
