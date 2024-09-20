@@ -6,7 +6,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import ipc_extension
-
+import os
+torch.backends.cudnn.benchmark = True
 fifo_path = "testfifo"
 # GPU 메모리를 가리키는 Tensor를 반환하는 함수를 호출
 
@@ -16,7 +17,8 @@ fifo_path = "testfifo"
 
 # 예를 들어, 이후에 Tensor의 값을 계속 확인 가능
 import time
-
+# os.environ['CUDA_LAUNCH_BLOCKING']="1"
+# os.environ['TORCH_USE_CUDA_DSA'] = "1"
 
 # time.sleep(1)
 
@@ -92,29 +94,86 @@ def train_and_save(net, trainloader, device):
 
 #train_and_save()
 
-net=SimpleCNN()
+# net=SimpleCNN()
 
-checkpoint= torch.load("./model/cnn.pt")
+checkpoint= torch.load("./model/cnn.pt", weights_only=True)
 net.load_state_dict(checkpoint['model'])
 net.eval()
-
+torch.cuda.empty_cache()
 import torch
 import ctypes
 from torch.cuda import current_device, Event
+net.to(device)
 
 tensor = ipc_extension.read_and_return_tensor_ptr(fifo_path)
 
-net.to(device)
+# net.to(device)
 t=transforms.Normalize((0.5), (0.5))
+stop = torch.ones(1)*-1
+stop = stop.to(device="cuda:0")
 
-while(tensor[0]!=-1):
-    ipc_extension.polling_input()
-    torch.cuda.synchronize(device)
-    tensor1=torch.reshape(tensor, (1,1,28,28))
-    tensor1=t(tensor1)
-    _, outputs = net(tensor1).max(1)
-    print(outputs)
-    torch.cuda.synchronize(device)
-    ipc_extension.set_tail()
-    torch.cuda.synchronize(device)
-    time.sleep(0.1)
+
+ipc_extension.polling_input()
+#torch.cuda.synchronize(device)
+_, outputs = net(torch.reshape((tensor-0.5)/0.5, (1,1,28,28))).max(1)
+#torch.cuda.synchronize(device)
+ipc_extension.set_tail()
+torch.cuda.synchronize(device)
+time.sleep(0.01)
+# print(outputs)
+# time.sleep(0.01)
+
+ipc_extension.polling_input()
+#torch.cuda.synchronize(device)
+_, outputs = net(torch.reshape((tensor-0.5)/0.5, (1,1,28,28))).max(1)
+#print(outputs)
+#torch.cuda.synchronize(device)
+ipc_extension.set_tail()
+torch.cuda.synchronize(device)
+time.sleep(0.01)
+# print(outputs)
+# time.sleep(0.01)
+
+ipc_extension.polling_input()
+#torch.cuda.synchronize(device)
+_, outputs = net(torch.reshape((tensor-0.5)/0.5, (1,1,28,28))).max(1)
+#print(outputs)
+#torch.cuda.synchronize(device)
+ipc_extension.set_tail()
+torch.cuda.synchronize(device)
+time.sleep(0.01)
+# print(outputs)
+# time.sleep(0.01)
+
+ipc_extension.polling_input()
+#torch.cuda.synchronize(device)
+_, outputs = net(torch.reshape((tensor-0.5)/0.5, (1,1,28,28))).max(1)
+#print(outputs)
+#torch.cuda.synchronize(device)
+ipc_extension.set_tail()
+torch.cuda.synchronize(device)
+time.sleep(0.01)
+# print(outputs)
+# time.sleep(0.01)
+
+ipc_extension.polling_input()
+#torch.cuda.synchronize(device)
+_, outputs = net(torch.reshape((tensor-0.5)/0.5, (1,1,28,28))).max(1)
+#print(outputs)
+#torch.cuda.synchronize(device)
+ipc_extension.set_tail()
+torch.cuda.synchronize(device)
+time.sleep(0.01)
+# print(outputs)
+# time.sleep(0.01)
+
+ipc_extension.polling_input()
+#torch.cuda.synchronize(device)
+_, outputs = net(torch.reshape((tensor-0.5)/0.5, (1,1,28,28))).max(1)
+#print(outputs)
+#torch.cuda.synchronize(device)
+ipc_extension.set_tail()
+torch.cuda.synchronize(device)
+time.sleep(0.01)
+# print(outputs)
+# time.sleep(0.01)

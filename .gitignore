@@ -2,3 +2,4 @@
 *.o
 */build/*
 *.nsys-rep
+*.JPEG
